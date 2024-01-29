@@ -1,0 +1,19 @@
+# Node.js dependencies
+node_modules/
+
+# Compiled files
+build/
+dist/
+*.css
+*.js
+
+# Environment variables
+.env
+
+# Editor files
+.vscode/
+.DS_Store
+
+# Package lock files
+package-lock.json
+yarn.lock
