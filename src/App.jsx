@@ -5,14 +5,19 @@ import PatientsList from "./components/PatientsList"
 
 const App = () => {
 
-  const [patients, setPatientes] = useState([]);
+  const [patients, setPatients] = useState([]);
 
   return (
     <div className="container mx-auto mt-20">
       <Header />
       <div className="mt-12 md:flex">
-        <Form />
-        <PatientsList />
+        <Form 
+          setPatients={setPatients}
+          patients={patients}
+        />
+        <PatientsList 
+          patients={patients}
+        />
       </div>
 
     </div>

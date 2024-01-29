@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
+import Error from './Error';
 
-const Form = () => {
+const Form = ({ patients, setPatients }) => {
   const [petName, setPetName] = useState('');
   const [ownerName, setOwnerName] = useState('');
   const [email, setEmail] = useState('');
@@ -9,14 +10,38 @@ const Form = () => {
 
   const [error, setError] = useState(false);
 
+  const generateId = () => {
+    const random = Math.random().toString(36).substring(2);
+    const fecha = Date.now().toString(36);
+    return random + fecha;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if ([petName, ownerName, email, date, synthoms].includes('')) {
       setError(true);
       return;
     }
-
+    // Error Handling
     setError(false);
+
+    // Patient object to add to state
+    const patientObject = {
+      petName,
+      ownerName,
+      email,
+      date,
+      synthoms,
+      id: generateId()
+    }
+    setPatients([...patients, patientObject]);
+    
+    //Restart Values
+    setDate('')
+    setPetName('')
+    setOwnerName('')
+    setEmail('')
+    setSynthoms('')
   }
 
   return (
@@ -33,9 +58,7 @@ const Form = () => {
           onSubmit={handleSubmit}  
         >
           { error &&
-            <div className='bg-red-800 text-white text-center p-3 uppercase font-bold mb-3 rounded-md'>
-              <p>All values required!</p>
-            </div>
+            <Error errorMessage='All fields required!' />
           }
           <div className="mb-5">
             <label htmlFor="pet" className="block text-gray-700 uppercase font-bold">
