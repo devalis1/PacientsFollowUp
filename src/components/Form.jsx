@@ -1,14 +1,25 @@
 import {useState, useEffect} from 'react';
 import Error from './Error';
 
-const Form = ({ patients, setPatients }) => {
+const Form = ({ patients, setPatients, patient, setPatient }) => {
   const [petName, setPetName] = useState('');
   const [ownerName, setOwnerName] = useState('');
   const [email, setEmail] = useState('');
   const [date, setDate] = useState('');
   const [synthoms, setSynthoms] = useState('');
-
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (patient && Object.keys(patient).length > 0) {
+      setPetName(patient.petName || '');
+      setOwnerName(patient.ownerName || '');
+      setEmail(patient.email || '');
+      setDate(patient.date || ''); 
+      setSynthoms(patient.synthoms || '');
+    }
+  }, [patient]);
+  
+  
 
   const generateId = () => {
     const random = Math.random().toString(36).substring(2);
@@ -31,10 +42,21 @@ const Form = ({ patients, setPatients }) => {
       ownerName,
       email,
       date,
-      synthoms,
-      id: generateId()
+      synthoms
     }
-    setPatients([...patients, patientObject]);
+
+    if(patient.id) {
+      patientObject.id = patient.id;
+      const updatedPatients = patients.map( patientInState => 
+        patientInState.id === patient.id ? patientObject : patientInState
+      )
+      setPatients(updatedPatients)
+      setPatient({})
+    }
+    else {
+      patientObject.id = generateId();
+      setPatients([...patients, patientObject]);
+    }
     
     //Restart Values
     setDate('')
@@ -131,7 +153,7 @@ const Form = ({ patients, setPatients }) => {
           <input 
             type="submit"
             className="bg-indigo-600 w-full p-3 text-white uppercase font-bold rounded-md hover:bg-indigo-700 cursor-pointer transition-all"
-            value="Add Patient"
+            value={ patient.id ? "Edit Patient" : "Add Patient" }
           />
         </form>
     </div>
